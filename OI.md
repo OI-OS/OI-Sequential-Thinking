@@ -365,9 +365,29 @@ Should show:
 
 **Error:** Natural language queries don't extract parameters correctly
 
-**Solutions:**
-1. Use direct calls instead: `./brain-trust4 call OI-Sequential-Thinking sequentialthinking '{...}'`
-2. Check parameter extractors in `parameter_extractors.toml.default`
+**Status:** ✅ **FIXED** - The server now handles parameter engine limitations gracefully.
+
+**Solution:** The server automatically:
+- Detects when extractor key patterns are passed instead of values
+- Uses sensible defaults (thoughtNumber: 1, totalThoughts: 5, nextThoughtNeeded: true)
+- Converts string numbers/booleans to proper types
+- Falls back to defaults if values are invalid
+
+**Natural language queries now work:**
+```bash
+./oi "sequential thinking about how to optimize database queries"
+./oi "think step by step about improving code performance"
+```
+
+**For explicit control, use direct calls:**
+```bash
+./brain-trust4 call OI-Sequential-Thinking sequentialthinking '{
+  "thought": "Your thinking here",
+  "thoughtNumber": 1,
+  "totalThoughts": 5,
+  "nextThoughtNeeded": true
+}'
+```
 3. Verify intent mappings exist: `sqlite3 brain-trust4.db "SELECT * FROM intent_mappings WHERE server_name = 'OI-Sequential-Thinking';"`
 
 ---
