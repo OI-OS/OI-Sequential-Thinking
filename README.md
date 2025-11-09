@@ -2,6 +2,22 @@
 
 An MCP server implementation that provides a tool for dynamic and reflective problem-solving through a structured thinking process.
 
+---
+
+## ⚠️ For AI Agents Using OI OS
+
+**If you are an AI agent installing this server in OI OS (Brain Trust 4), please see [OI.md](./OI.md) for comprehensive installation instructions, including:**
+
+- Step-by-step installation guide
+- Intent mappings and parameter rules setup
+- Parameter extractors configuration
+- Troubleshooting guide
+- Complete tool reference
+
+The OI.md file contains all the information needed for AI agents to properly configure and use this server in the OI OS environment.
+
+---
+
 ## Features
 
 - Break down complex problems into manageable steps
