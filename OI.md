@@ -47,7 +47,7 @@ npm run build
 cd ../../
 ./brain-trust4 connect OI-Sequential-Thinking node -- "$(pwd)/MCP-servers/OI-Sequential-Thinking/dist/index.js"
 
-# 4. Create intent mappings and parameter rules
+# 4. Create intent mappings, parameter rules, and reminder message
 sqlite3 brain-trust4.db << 'SQL'
 BEGIN TRANSACTION;
 
@@ -65,6 +65,9 @@ INSERT OR REPLACE INTO parameter_rules (server_name, tool_name, tool_signature, 
  '["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]',
  '{"thought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.thought"}, "nextThoughtNeeded": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded"}, "thoughtNumber": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.thoughtNumber"}, "totalThoughts": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.totalThoughts"}, "isRevision": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.isRevision"}, "revisesThought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.revisesThought"}, "branchFromThought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.branchFromThought"}, "branchId": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.branchId"}, "needsMoreThoughts": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.needsMoreThoughts"}}',
  '[]');
+
+-- Add reminder message for AI agents (IMPORTANT: This is a three-step process!)
+UPDATE mcp_servers SET reminder_message = 'AI INSTRUCTIONS - This is a three step process. Make sure you do all three steps!' WHERE name = 'OI-Sequential-Thinking';
 
 COMMIT;
 SQL
@@ -145,9 +148,15 @@ From your OI OS project root:
 
 ## Creating Intent Mappings
 
+**⚠️ IMPORTANT: This is a three-step process. Make sure you complete all three steps!**
+
+1. Create intent mappings
+2. Create parameter rules
+3. Add reminder message to mcp_servers table
+
 Intent mappings allow OI OS to route natural language queries to Sequential Thinking tools. The mappings are created in the `brain-trust4.db` database.
 
-**SQL to create intent mappings:**
+**SQL to create intent mappings (Step 1 of 3):**
 
 ```sql
 INSERT OR REPLACE INTO intent_mappings (keyword, server_name, tool_name, priority) VALUES
@@ -170,7 +179,7 @@ INSERT OR REPLACE INTO intent_mappings (keyword, server_name, tool_name, priorit
 
 Parameter rules define required fields and extraction patterns for each tool. These are created in the `brain-trust4.db` database.
 
-**SQL to create parameter rules:**
+**SQL to create parameter rules (Step 2 of 3):**
 
 ```sql
 INSERT OR REPLACE INTO parameter_rules (server_name, tool_name, tool_signature, required_fields, field_generators, patterns) VALUES
@@ -192,6 +201,48 @@ INSERT OR REPLACE INTO parameter_rules (server_name, tool_name, tool_signature, 
 - `branchFromThought` (integer): Branching point thought number
 - `branchId` (string): Branch identifier
 - `needsMoreThoughts` (boolean): If more thoughts are needed
+
+**⚠️ IMPORTANT: After creating intent mappings and parameter rules, you MUST complete Step 3: Add the reminder message to the mcp_servers table.**
+
+---
+
+## Adding Reminder Message (Step 3 of 3)
+
+**⚠️ CRITICAL: This is the third and final step. Do not skip this!**
+
+After creating intent mappings and parameter rules, you must add a reminder message to the `mcp_servers` table. This reminder helps AI agents remember that this is a three-step process.
+
+**SQL to add reminder message:**
+
+```sql
+UPDATE mcp_servers SET reminder_message = 'AI INSTRUCTIONS - This is a three step process. Make sure you do all three steps!' WHERE name = 'OI-Sequential-Thinking';
+```
+
+**Complete three-step SQL (all steps in one transaction):**
+
+```sql
+BEGIN TRANSACTION;
+
+-- Step 1: Intent mappings
+INSERT OR REPLACE INTO intent_mappings (keyword, server_name, tool_name, priority) VALUES
+('sequential thinking', 'OI-Sequential-Thinking', 'sequentialthinking', 10),
+('think sequentially', 'OI-Sequential-Thinking', 'sequentialthinking', 10),
+('step by step thinking', 'OI-Sequential-Thinking', 'sequentialthinking', 10),
+('sequential thought', 'OI-Sequential-Thinking', 'sequentialthinking', 10),
+('think step by step', 'OI-Sequential-Thinking', 'sequentialthinking', 10);
+
+-- Step 2: Parameter rules
+INSERT OR REPLACE INTO parameter_rules (server_name, tool_name, tool_signature, required_fields, field_generators, patterns) VALUES
+('OI-Sequential-Thinking', 'sequentialthinking', 'OI-Sequential-Thinking::sequentialthinking', 
+ '["thought", "nextThoughtNeeded", "thoughtNumber", "totalThoughts"]',
+ '{"thought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.thought"}, "nextThoughtNeeded": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded"}, "thoughtNumber": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.thoughtNumber"}, "totalThoughts": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.totalThoughts"}, "isRevision": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.isRevision"}, "revisesThought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.revisesThought"}, "branchFromThought": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.branchFromThought"}, "branchId": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.branchId"}, "needsMoreThoughts": {"FromQuery": "OI-Sequential-Thinking::sequentialthinking.needsMoreThoughts"}}',
+ '[]');
+
+-- Step 3: Reminder message (REQUIRED - do not skip!)
+UPDATE mcp_servers SET reminder_message = 'AI INSTRUCTIONS - This is a three step process. Make sure you do all three steps!' WHERE name = 'OI-Sequential-Thinking';
+
+COMMIT;
+```
 
 ---
 
