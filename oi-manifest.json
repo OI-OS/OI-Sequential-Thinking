@@ -1,0 +1,46 @@
+{
+  "server_name": "OI-Sequential-Thinking",
+  "version": "1.0.0",
+  "intents": [
+    {
+      "keyword": "sequential thinking",
+      "tool_name": "sequentialthinking",
+      "priority": 10
+    },
+    {
+      "keyword": "think sequentially",
+      "tool_name": "sequentialthinking",
+      "priority": 10
+    },
+    {
+      "keyword": "step by step thinking",
+      "tool_name": "sequentialthinking",
+      "priority": 10
+    },
+    {
+      "keyword": "sequential thought",
+      "tool_name": "sequentialthinking",
+      "priority": 10
+    },
+    {
+      "keyword": "think step by step",
+      "tool_name": "sequentialthinking",
+      "priority": 10
+    }
+  ],
+  "parameter_extractors": {
+    "sequentialthinking": {
+      "OI-Sequential-Thinking::sequentialthinking.thought": "template:{{query}}",
+      "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded": "conditional:if_contains:more,continue,next,another,keep going|then:default:true|else:default:false",
+      "OI-Sequential-Thinking::sequentialthinking.thoughtNumber": "conditional:if_matches:\\d+|then:regex:\\b(\\d+)\\b|else:default:1",
+      "OI-Sequential-Thinking::sequentialthinking.totalThoughts": "conditional:if_matches:\\d+|then:regex:(?:total|need|estimate|planning)\\s+(\\d+)|else:default:5",
+      "OI-Sequential-Thinking::sequentialthinking.isRevision": "conditional:if_contains:revise,revision,reconsider,change,update,correct|then:default:true|else:default:false",
+      "OI-Sequential-Thinking::sequentialthinking.revisesThought": "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:regex:\\b(\\d+)\\b",
+      "OI-Sequential-Thinking::sequentialthinking.branchFromThought": "conditional:if_matches:branch|then:regex:branch(?:ing)?\\s+(?:from|at)?\\s*thought\\s+(\\d+)|else:default:null",
+      "OI-Sequential-Thinking::sequentialthinking.branchId": "regex:branch(?:\\s+id)?[\\s:]+([A-Za-z0-9_-]+)",
+      "OI-Sequential-Thinking::sequentialthinking.needsMoreThoughts": "conditional:if_contains:more thoughts,need more,add more,extend|then:default:true|else:default:false"
+    }
+  },
+  "reminder_message": "Sequential Thinking MCP server for step-by-step problem solving. Supports dynamic thought processes with revision and branching capabilities. Use direct calls for maximum reliability."
+}
+
