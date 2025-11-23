@@ -31,9 +31,9 @@
   "parameter_extractors": {
     "sequentialthinking": {
       "OI-Sequential-Thinking::sequentialthinking.thought": "template:{{query}}",
-      "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded": "conditional:if_contains:more,continue,next,another,keep going|then:default:true|else:default:false",
-      "OI-Sequential-Thinking::sequentialthinking.thoughtNumber": "conditional:if_matches:\\d+|then:regex:\\b(\\d+)\\b|else:default:1",
-      "OI-Sequential-Thinking::sequentialthinking.totalThoughts": "conditional:if_matches:\\d+|then:regex:(?:total|need|estimate|planning)\\s+(\\d+)|else:default:5",
+      "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded": "conditional:if_contains:done,finished,complete,no more,stop|then:default:false|else:default:true",
+      "OI-Sequential-Thinking::sequentialthinking.thoughtNumber": "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:default:1",
+      "OI-Sequential-Thinking::sequentialthinking.totalThoughts": "conditional:if_matches:(?:in\\s+)?(\\d+)\\s+thought|then:regex:(?:in\\s+)?(\\d+)\\s+thought|else:default:3",
       "OI-Sequential-Thinking::sequentialthinking.isRevision": "conditional:if_contains:revise,revision,reconsider,change,update,correct|then:default:true|else:default:false",
       "OI-Sequential-Thinking::sequentialthinking.revisesThought": "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:regex:\\b(\\d+)\\b",
       "OI-Sequential-Thinking::sequentialthinking.branchFromThought": "conditional:if_matches:branch|then:regex:branch(?:ing)?\\s+(?:from|at)?\\s*thought\\s+(\\d+)|else:default:null",
@@ -41,6 +41,6 @@
       "OI-Sequential-Thinking::sequentialthinking.needsMoreThoughts": "conditional:if_contains:more thoughts,need more,add more,extend|then:default:true|else:default:false"
     }
   },
-  "reminder_message": "Sequential Thinking MCP server for step-by-step problem solving. Supports dynamic thought processes with revision and branching capabilities. Use direct calls for maximum reliability."
+  "reminder_message": "🚨 MANDATORY: Sequential Thinking detected! You MUST continue through ALL steps. Current: Step X of Y. Next: Call tool with thoughtNumber=X+1. Continue until nextThoughtNeeded=false. DO NOT stop after first step - this is a multi-step process requiring completion of all steps!"
 }
 
