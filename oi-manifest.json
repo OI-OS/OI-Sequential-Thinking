@@ -32,8 +32,8 @@
     "sequentialthinking": {
       "OI-Sequential-Thinking::sequentialthinking.thought": "template:{{query}}",
       "OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded": "conditional:if_contains:done,finished,complete,no more,stop|then:default:false|else:default:true",
-      "OI-Sequential-Thinking::sequentialthinking.thoughtNumber": "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:default:1",
-      "OI-Sequential-Thinking::sequentialthinking.totalThoughts": "conditional:if_matches:(?:in\\s+)?(\\d+)\\s+thought|then:regex:(?:in\\s+)?(\\d+)\\s+thought|else:default:3",
+      "OI-Sequential-Thinking::sequentialthinking.thoughtNumber": "regex:(?:step|thought)\\s+(\\d+)|default:1",
+      "OI-Sequential-Thinking::sequentialthinking.totalThoughts": "regex:(?:of|in)\\s+(\\d+)|regex:(?:in\\s+)?(\\d+)\\s+thought|default:3",
       "OI-Sequential-Thinking::sequentialthinking.isRevision": "conditional:if_contains:revise,revision,reconsider,change,update,correct|then:default:true|else:default:false",
       "OI-Sequential-Thinking::sequentialthinking.revisesThought": "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:regex:\\b(\\d+)\\b",
       "OI-Sequential-Thinking::sequentialthinking.branchFromThought": "conditional:if_matches:branch|then:regex:branch(?:ing)?\\s+(?:from|at)?\\s*thought\\s+(\\d+)|else:default:null",
