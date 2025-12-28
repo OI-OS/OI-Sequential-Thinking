@@ -77,7 +77,7 @@ SQL
 
 # 6. Verify installation
 ./oi list | grep OI-Sequential-Thinking
-./brain-trust4 call OI-Sequential-Thinking sequentialthinking '{"thought": "Test thought", "thoughtNumber": 1, "totalThoughts": 3, "nextThoughtNeeded": true}'
+./brain-trust4 call OI-Sequential-Thinking sequentialthinking '{"thought": "Test thought", "thoughtNumber": 1, "totalThoughts": 5, "nextThoughtNeeded": true}'
 ```
 
 ---
@@ -248,16 +248,16 @@ COMMIT;
 
 ## Parameter Extractors
 
-Parameter extractors parse natural language queries to extract values for tool parameters. These are configured in `parameter_extractors.toml.default`.
+Parameter extractors parse natural language queries to extract values for tool parameters. These are configured in `extractors.toml` in the OI OS project root.
 
 **All extractors for OI-Sequential-Thinking:**
 
 ```toml
 # OI-SEQUENTIAL-THINKING
 "OI-Sequential-Thinking::sequentialthinking.thought" = "template:{{query}}"
-"OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded" = "conditional:if_contains:more,continue,next,another,keep going|then:default:true|else:default:false"
-"OI-Sequential-Thinking::sequentialthinking.thoughtNumber" = "conditional:if_matches:\\d+|then:regex:\\b(\\d+)\\b|else:default:1"
-"OI-Sequential-Thinking::sequentialthinking.totalThoughts" = "conditional:if_matches:\\d+|then:regex:(?:total|need|estimate|planning)\\s+(\\d+)|else:default:5"
+"OI-Sequential-Thinking::sequentialthinking.nextThoughtNeeded" = "conditional:if_contains:done,finished,complete,no more,stop|then:default:false|else:default:true"
+"OI-Sequential-Thinking::sequentialthinking.thoughtNumber" = "regex:(?:step|thought)\\s+(\\d+)|default:1"
+"OI-Sequential-Thinking::sequentialthinking.totalThoughts" = "regex:(?:of|in)\\s+(\\d+)|(?:in\\s+)?(\\d+)\\s+thought|(\\d+)\\s+steps?|default:5"
 "OI-Sequential-Thinking::sequentialthinking.isRevision" = "conditional:if_contains:revise,revision,reconsider,change,update,correct|then:default:true|else:default:false"
 "OI-Sequential-Thinking::sequentialthinking.revisesThought" = "conditional:if_matches:thought\\s+(\\d+)|then:regex:thought\\s+(\\d+)|else:regex:\\b(\\d+)\\b"
 "OI-Sequential-Thinking::sequentialthinking.branchFromThought" = "conditional:if_matches:branch|then:regex:branch(?:ing)?\\s+(?:from|at)?\\s*thought\\s+(\\d+)|else:default:null"
@@ -265,7 +265,9 @@ Parameter extractors parse natural language queries to extract values for tool p
 "OI-Sequential-Thinking::sequentialthinking.needsMoreThoughts" = "conditional:if_contains:more thoughts,need more,add more,extend|then:default:true|else:default:false"
 ```
 
-**Note:** These extractors are pre-configured in `parameter_extractors.toml.default`. No additional configuration is needed.
+**Note:** These extractors are pre-configured in `extractors.toml`. The default `totalThoughts` is **5 steps** (changed from 3). The extractors now support:
+- **thoughtNumber**: Detects "step X" or "thought X" patterns (e.g., "step 2", "thought 3")
+- **totalThoughts**: Detects "of X", "in X", "X thought", or "X steps" patterns (e.g., "step 2 of 10", "10 steps", "5 thought")
 
 ---
 
